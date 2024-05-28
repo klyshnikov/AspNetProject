@@ -6,4 +6,6 @@ public interface IUserRepository {
     void addUser(User user);
 
     User findByLogin(String login);
+
+    List<User> getAllUsers();
 }

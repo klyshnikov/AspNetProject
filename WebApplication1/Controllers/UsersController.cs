@@ -21,6 +21,20 @@ public class UsersController : ControllerBase {
         _userService = userService;
     }
     
+    // Show all users
+    [HttpGet("/get-all")]
+    [Authorize]
+    public List<User> getAllUsers() {
+        return _userService.getAllUsers();
+    }
+    
+    // Create
+    [HttpPost("/create-user")]
+    [Authorize(Roles = "admin")]
+    public User createUser([FromBody] CreateUserRequestForm form) {
+        Console.WriteLine("Here 1!!!");
+        return _userService.createUser(form);
+    }
     
     // Update
     [Authorize]

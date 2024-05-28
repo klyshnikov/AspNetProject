@@ -9,4 +9,6 @@ public interface IUserService {
     User changeNameOrGenderOrBirthday(String originalLogin, String name, Genders gender, DateTime birthDate);
 
     User changePassword(string originalLogin, string password);
+
+    List<User> getAllUsers();
 }

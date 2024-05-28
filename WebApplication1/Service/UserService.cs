@@ -16,6 +16,7 @@ public class UserService : IUserService {
         DateTime birthDayFormat = new DateTime(form.birthDay.Year, form.birthDay.Month, form.birthDay.Day);
         User user = new User(form.login, form.password, form.name, (Genders) form.gender, birthDayFormat, form.role);
         _userRepository.addUser(user);
+        Console.WriteLine(_userRepository.getAllUsers().Count);
         return user;
     }
 
@@ -33,5 +34,9 @@ public class UserService : IUserService {
         originalUser.Password = password;
         _userRepository.addUser(originalUser);
         return originalUser;
+    }
+
+    public List<User> getAllUsers() {
+        return _userRepository.getAllUsers();
     }
 }
