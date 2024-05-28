@@ -1,6 +1,7 @@
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,6 @@ public class UsersController : ControllerBase {
         return _userService.getAllUsers();
     }
     
-    // Create
-    [HttpPost("/create-user")]
-    [Authorize(Roles = "admin")]
-    public User createUser([FromBody] CreateUserRequestForm form) {
-        Console.WriteLine("Here 1!!!");
-        return _userService.createUser(form);
-    }
     
     // Update
     [Authorize]
@@ -48,8 +42,31 @@ public class UsersController : ControllerBase {
     }
 
     [Authorize]
-    [HttpPut("/change-user-password/{originalLogin}/{password}")]
-    public User changePassword([FromRoute] string originalLogin, [FromRoute] string password) {
-        return _userService.changePassword(originalLogin, password);
+    [HttpPut("/change-user-password/{password}")]
+    public User changePassword([FromRoute] string password) {
+        var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+        return _userService.changePassword(userLogin, password);
     }
+
+    [Authorize]
+    [HttpPut("/change-user-login/{login}")]
+    public User changeLogin([FromRoute] string login) {
+        var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+        return _userService.changeLogin(userLogin, login);
+    }
+    
+    // Read
+    [Authorize]
+    [HttpGet("/get-user-by-loing-and-password/{login}/{password}")]
+    public User getUserByLoginAndPassword([FromRoute] string login, [FromRoute] string password) {
+        User user = _userService.getUserByLogin(login);
+        if (user.Password == password) {
+            return user;
+        }
+        else {
+            throw new Exception();
+        }
+    }
+
+
 }

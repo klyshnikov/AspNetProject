@@ -10,5 +10,19 @@ public interface IUserService {
 
     User changePassword(string originalLogin, string password);
 
+    User changeLogin(string userLogin, string login);
+
+    User getUserByLogin(string login);
+
     List<User> getAllUsers();
+
+    List<User> getAllActiveUsers();
+
+    List<User> getAllUsersGreatherThen(int age);
+
+    void deleteUser(string login);
+
+    void deleteUserSoft(string login, string revokedBy);
+
+    void restoreUser(string login);
 }

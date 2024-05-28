@@ -2,14 +2,22 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Api;
+using WebApplication1.Models;
 
 namespace WebApplication1.Service;
 
 public class AuthService : IAuthService {
-    public string registrateUser(string name, string password, string roleName) {
+    private IUserRepository _userRepository;
+
+    public AuthService(IUserRepository userRepository) {
+        _userRepository = userRepository;
+    }
+
+    public string registrateUser(string login, string password, string roleName) {
         
-        var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, name),
-                                    new Claim(ClaimsIdentity.DefaultRoleClaimType, roleName) };
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, login),
+                                    new Claim(ClaimsIdentity.DefaultRoleClaimType, roleName)
+        };
         var token = new JwtSecurityToken(
             issuer: AuthOptions.ISSUER,
             audience: AuthOptions.AUDIENCE,
@@ -21,6 +29,7 @@ public class AuthService : IAuthService {
         string tokenString = handler.WriteToken(token);
         
         //paramet.httpContext.Response.Cookies.Append("token", tokenString);
+        _userRepository.addUser(new User(login, password, roleName));
 
         return tokenString;
         

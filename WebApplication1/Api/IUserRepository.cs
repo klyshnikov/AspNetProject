@@ -8,4 +8,6 @@ public interface IUserRepository {
     User findByLogin(String login);
 
     List<User> getAllUsers();
+
+    void deleteUser(string login);
 }

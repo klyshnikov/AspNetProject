@@ -8,6 +8,15 @@ namespace WebApplication1.Models;
 public class User {
     public User() { }
 
+    public User(string login, string password, string role) {
+        Login = login;
+        Password = password;
+        Admin = (role == "admin");
+        
+        CreatedOn = DateTime.Now;
+        CreatedBy = login;
+    }
+
     public User(string login, string password, string name, Genders gender, DateTime birthDate, string role) {
         Login = login;
         Password = password;
@@ -19,7 +28,7 @@ public class User {
         CreatedOn = DateTime.Now;
         CreatedBy = login;
     }
-
+    
     public Role Role { get; set; }
 
     public int Guid { get; set; }
@@ -41,6 +50,9 @@ public class User {
         set {
             if (value.All(letter => Char.IsLetterOrDigit(letter)))
                 _password = value;
+            else {
+                throw new Exception();
+            }
         }
     }
     
@@ -58,7 +70,7 @@ public class User {
 
     public Genders Gender { get; set; }
 
-    public DateTime? Bithday { get; set; }
+    public DateTime Bithday { get; set; }
 
     public bool Admin { get; set; }
 

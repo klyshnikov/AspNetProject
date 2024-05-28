@@ -11,7 +11,7 @@ public class UserRepository : IUserRepository {
     }
 
     public void addUser(User user) {
-        //users = users.Where(u => u.Login != user.Login).ToList();
+        users = users.Where(u => u.Login != user.Login).ToList();
         users.Add(user);
         Console.WriteLine(users.Count);
     }
@@ -22,5 +22,9 @@ public class UserRepository : IUserRepository {
 
     public List<User> getAllUsers() {
         return users;
+    }
+
+    public void deleteUser(string login) {
+        users = users.Where(user => user.Login != login).ToList();
     }
 }

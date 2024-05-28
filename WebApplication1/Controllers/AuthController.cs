@@ -39,11 +39,11 @@ public class AuthController : ControllerBase, UsersApi {
 
     [HttpPost("/registration")]
     public string registration(RegistrationRequestForm registrationRequestForm) {
-        string name = registrationRequestForm.Name;
+        string login = registrationRequestForm.Login;
         string password = registrationRequestForm.Password;
         string role = registrationRequestForm.Role;
 
-        return _authService.registrateUser(name, password, role);
+        return _authService.registrateUser(login, password, role);
     
     }
 
