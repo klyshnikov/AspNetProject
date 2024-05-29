@@ -10,21 +10,21 @@ public class UserRepository : IUserRepository {
         users = new List<User>();
     }
 
-    public void addUser(User user) {
+    public void AddUser(User user) {
         users = users.Where(u => u.Login != user.Login).ToList();
         users.Add(user);
         Console.WriteLine(users.Count);
     }
 
-    public User findByLogin(string login) {
+    public User FindByLogin(string login) {
         return users.Find(u => u.Login == login);
     }
 
-    public List<User> getAllUsers() {
+    public List<User> GetAllUsers() {
         return users;
     }
 
-    public void deleteUser(string login) {
+    public void DeleteUser(string login) {
         users = users.Where(user => user.Login != login).ToList();
     }
 }

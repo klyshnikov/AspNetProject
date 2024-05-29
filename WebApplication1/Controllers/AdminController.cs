@@ -16,50 +16,76 @@ public class AdminController : ControllerBase {
         _userService = userService;
     }
     
+    
+    //Update
+    [Authorize]
+    [HttpPut("/change-user-info")]
+    public User ChangeNameOrGenderOrBirthday([FromBody] ChangeForAdminRequestForm form) {
+        //_userService.checkUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        return _userService.ChangeNameOrGenderOrBirthday(
+            form.OriginalLogin,
+            form.Name, 
+            (Genders)form.Gender,
+            new DateTime(form.BirthDate.Year, form.BirthDate.Month, form.BirthDate.Day));
+    }
+    
+    [Authorize]
+    [HttpPut("/change-user-password/{userLogin}/{password}")]
+    public User ChangePassword([FromRoute] string userLogin, [FromRoute] string password) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        return _userService.ChangePassword(userLogin, password);
+    }
+
+    [Authorize]
+    [HttpPut("/change-user-login/{userLogin}/{newLogin}")]
+    public User ChangeLogin([FromRoute] string userLogin, [FromRoute] string newLogin) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        return _userService.ChangeLogin(userLogin, newLogin);
+    }
+    
     // Create
     [HttpPost("/create-user")]
     [Authorize(Roles = "admin")]
-    public User createUser([FromBody] CreateUserRequestForm form) {
-        Console.WriteLine("Here 1!!!");
-        return _userService.createUser(form);
+    public User CreateUser([FromBody] CreateUserRequestForm form) {
+        return _userService.CreateUser(form);
     }
     
     // Uppdate
     [HttpPost("restore-user/{login}")]
     [Authorize(Roles = "admin")]
-    public void restoreUser([FromRoute] string login) {
-        _userService.restoreUser(login);
+    public void RestoreUser([FromRoute] string login) {
+        _userService.RestoreUser(login);
     }
 
     // Read
     [HttpGet("/get-all-active-users")]
     [Authorize(Roles = "admin")]
     public List<User> GetAllActiveUsers() {
-        return _userService.getAllActiveUsers();
+        return _userService.GetAllActiveUsers();
     }
 
     [HttpGet("/get-user/{login}")]
     [Authorize(Roles = "admin")]
-    public User getUser([FromRoute] string login) {
-        return _userService.getUserByLogin(login);
+    public User GetUser([FromRoute] string login) {
+        return _userService.GetUserByLogin(login);
     }
 
     [HttpGet("/get-user-greather-than/{age}")]
     [Authorize(Roles = "admin")]
-    public List<User> getUsersGreatherThan([FromRoute] int age) {
-        return _userService.getAllUsersGreatherThen(age);
+    public List<User> GetUsersGreatherThan([FromRoute] int age) {
+        return _userService.GetAllUsersGreatherThen(age);
     }
 
     [HttpDelete("/delete-user/{login}")]
     [Authorize(Roles = "admin")]
-    public void deleteUser([FromRoute] string login) {
-        _userService.deleteUser(login);
+    public void DeleteUser([FromRoute] string login) {
+        _userService.DeleteUser(login);
     }
 
     [HttpDelete("/delete-user-soft/{login}")]
     [Authorize(Roles = "admin")]    
-    public void deleteUserSoft([FromRoute] string login) {
+    public void DeleteUserSoft([FromRoute] string login) {
         string currentLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-        _userService.deleteUserSoft(login, currentLogin);
+        _userService.DeleteUserSoft(login, currentLogin);
     }
 }

@@ -4,25 +4,27 @@ using WebApplication1.Models;
 namespace WebApplication1.Api;
 
 public interface IUserService {
-    User createUser(CreateUserRequestForm form);
+    User CreateUser(CreateUserRequestForm form);
 
-    User changeNameOrGenderOrBirthday(String originalLogin, String name, Genders gender, DateTime birthDate);
+    User ChangeNameOrGenderOrBirthday(String originalLogin, String name, Genders gender, DateTime birthDate);
 
-    User changePassword(string originalLogin, string password);
+    User ChangePassword(string originalLogin, string password);
 
-    User changeLogin(string userLogin, string login);
+    User ChangeLogin(string userLogin, string login);
 
-    User getUserByLogin(string login);
+    User GetUserByLogin(string login);
 
-    List<User> getAllUsers();
+    List<User> GetAllUsers();
 
-    List<User> getAllActiveUsers();
+    List<User> GetAllActiveUsers();
 
-    List<User> getAllUsersGreatherThen(int age);
+    List<User> GetAllUsersGreatherThen(int age);
 
-    void deleteUser(string login);
+    void DeleteUser(string login);
 
-    void deleteUserSoft(string login, string revokedBy);
+    void DeleteUserSoft(string login, string revokedBy);
 
-    void restoreUser(string login);
+    void RestoreUser(string login);
+
+    void CheckUserForRevokeOn(string login);
 }

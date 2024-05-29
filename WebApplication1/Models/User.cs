@@ -11,6 +11,7 @@ public class User {
     public User(string login, string password, string role) {
         Login = login;
         Password = password;
+        Role = new Role(role);
         Admin = (role == "admin");
         
         CreatedOn = DateTime.Now;
@@ -23,6 +24,7 @@ public class User {
         Name = name;
         Gender = gender;
         Bithday = birthDate;
+        Role = new Role(role);
         Admin = (role == "admin");
         
         CreatedOn = DateTime.Now;

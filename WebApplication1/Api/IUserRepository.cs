@@ -3,11 +3,11 @@ using WebApplication1.Models;
 namespace WebApplication1.Api;
 
 public interface IUserRepository {
-    void addUser(User user);
+    void AddUser(User user);
 
-    User findByLogin(String login);
+    User FindByLogin(String login);
 
-    List<User> getAllUsers();
+    List<User> GetAllUsers();
 
-    void deleteUser(string login);
+    void DeleteUser(string login);
 }

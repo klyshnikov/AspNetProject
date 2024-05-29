@@ -38,19 +38,19 @@ public class AuthController : ControllerBase, UsersApi {
     }
 
     [HttpPost("/registration")]
-    public string registration(RegistrationRequestForm registrationRequestForm) {
+    public string Registration(RegistrationRequestForm registrationRequestForm) {
         string login = registrationRequestForm.Login;
         string password = registrationRequestForm.Password;
         string role = registrationRequestForm.Role;
 
-        return _authService.registrateUser(login, password, role);
+        return _authService.RegistrateUser(login, password, role);
     
     }
 
     [HttpPost("/login")]
-    public string login(string name, string password) {
+    public string Login(string name, string password) {
 
-        return _authService.findTocken(name, password);
+        return _authService.FindTocken(name, password);
     }
     
 }

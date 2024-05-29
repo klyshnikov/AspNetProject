@@ -13,7 +13,7 @@ public class AuthService : IAuthService {
         _userRepository = userRepository;
     }
 
-    public string registrateUser(string login, string password, string roleName) {
+    public string RegistrateUser(string login, string password, string roleName) {
         
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, login),
                                     new Claim(ClaimsIdentity.DefaultRoleClaimType, roleName)
@@ -29,13 +29,34 @@ public class AuthService : IAuthService {
         string tokenString = handler.WriteToken(token);
         
         //paramet.httpContext.Response.Cookies.Append("token", tokenString);
-        _userRepository.addUser(new User(login, password, roleName));
+        _userRepository.AddUser(new User(login, password, roleName));
 
         return tokenString;
         
     }
 
-    public string findTocken(string name, string password) {
-        return "NO";
+    public string FindTocken(string name, string password) {
+        User user = _userRepository.FindByLogin(name);
+        if (user.Password != password) {
+            throw new Exception();
+        }
+        else {
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+            };
+            
+            var token = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            string tokenString = handler.WriteToken(token);
+
+            return tokenString;
+        }
     }
 }

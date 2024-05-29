@@ -23,19 +23,28 @@ public class UsersController : ControllerBase {
     }
     
     // Show all users
+    // TODO delete this
     [HttpGet("/get-all")]
     [Authorize]
-    public List<User> getAllUsers() {
-        return _userService.getAllUsers();
+    public List<User> GetAllUsers() {
+        return _userService.GetAllUsers();
     }
     
-    
+    // To help - show my info
+    [HttpGet("/get-my-account")]
+    [Authorize]
+    public User GetMyAccount() {
+        return _userService.GetUserByLogin(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+    }
+
+
     // Update
     [Authorize]
     [HttpPut("/change-user-info")]
-    public User changeNameOrGenderOrBirthday([FromBody] ChangeRequestForm form) {
-        return _userService.changeNameOrGenderOrBirthday(
-            form.OriginalLogin,
+    public User ChangeNameOrGenderOrBirthday([FromBody] ChangeRequestForm form) {
+        //_userService.checkUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        return _userService.ChangeNameOrGenderOrBirthday(
+            HttpContext.User.FindFirst(ClaimTypes.Name).Value,
             form.Name, 
             (Genders)form.Gender,
             new DateTime(form.BirthDate.Year, form.BirthDate.Month, form.BirthDate.Day));
@@ -43,23 +52,26 @@ public class UsersController : ControllerBase {
 
     [Authorize]
     [HttpPut("/change-user-password/{password}")]
-    public User changePassword([FromRoute] string password) {
+    public User ChangePassword([FromRoute] string password) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-        return _userService.changePassword(userLogin, password);
+        return _userService.ChangePassword(userLogin, password);
     }
 
     [Authorize]
     [HttpPut("/change-user-login/{login}")]
-    public User changeLogin([FromRoute] string login) {
+    public User ChangeLogin([FromRoute] string login) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-        return _userService.changeLogin(userLogin, login);
+        return _userService.ChangeLogin(userLogin, login);
     }
     
     // Read
     [Authorize]
     [HttpGet("/get-user-by-loing-and-password/{login}/{password}")]
-    public User getUserByLoginAndPassword([FromRoute] string login, [FromRoute] string password) {
-        User user = _userService.getUserByLogin(login);
+    public User GetUserByLoginAndPassword([FromRoute] string login, [FromRoute] string password) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        User user = _userService.GetUserByLogin(login);
         if (user.Password == password) {
             return user;
         }

@@ -12,72 +12,76 @@ public class UserService : IUserService {
         _userRepository = userRepository;
     }
 
-    public User createUser(CreateUserRequestForm form) {
-        Console.WriteLine("Here 2!!!");
+    public User CreateUser(CreateUserRequestForm form) {
         DateTime birthDayFormat = new DateTime(form.birthDay.Year, form.birthDay.Month, form.birthDay.Day);
         User user = new User(form.login, form.password, form.name, (Genders) form.gender, birthDayFormat, form.role);
-        _userRepository.addUser(user);
-        Console.WriteLine(_userRepository.getAllUsers().Count);
+        _userRepository.AddUser(user);
         return user;
     }
 
-    public User changeNameOrGenderOrBirthday(string originalLogin, string name, Genders gender, DateTime birthDate) {
-        User originalUser = _userRepository.findByLogin(originalLogin);
+    public User ChangeNameOrGenderOrBirthday(string originalLogin, string name, Genders gender, DateTime birthDate) {
+        User originalUser = _userRepository.FindByLogin(originalLogin);
         originalUser.Name = name;
         originalUser.Gender = gender;
         originalUser.Bithday = birthDate;
-        _userRepository.addUser(originalUser);
+        _userRepository.AddUser(originalUser);
         return originalUser;
     }
 
-    public User changePassword(string originalLogin, string password) {
-        User originalUser = _userRepository.findByLogin(originalLogin);
+    public User ChangePassword(string originalLogin, string password) {
+        User originalUser = _userRepository.FindByLogin(originalLogin);
         originalUser.Password = password;
-        _userRepository.addUser(originalUser);
+        _userRepository.AddUser(originalUser);
         return originalUser;
     }
 
-    public User changeLogin(string userLogin, string login) {
-        User originalUser = _userRepository.findByLogin(userLogin);
+    public User ChangeLogin(string userLogin, string login) {
+        User originalUser = _userRepository.FindByLogin(userLogin);
         originalUser.Login = login;
-        _userRepository.addUser(originalUser);
+        _userRepository.AddUser(originalUser);
         return originalUser;
     }
 
-    public User getUserByLogin(string login) {
-        return _userRepository.findByLogin(login);
+    public User GetUserByLogin(string login) {
+        return _userRepository.FindByLogin(login);
     }
 
-    public List<User> getAllUsers() {
-        return _userRepository.getAllUsers();
+    public List<User> GetAllUsers() {
+        return _userRepository.GetAllUsers();
     }
 
-    public List<User> getAllActiveUsers() {
-        List<User> currentActiveUsers = getAllUsers().Where(user => user.RevokedOn == null).ToList();
+    public List<User> GetAllActiveUsers() {
+        List<User> currentActiveUsers = GetAllUsers().Where(user => user.RevokedOn == null).ToList();
         currentActiveUsers.Sort(delegate(User u1, User u2)
             { return u1.CreatedOn.CompareTo(u2.CreatedOn); });
         return currentActiveUsers;
     }
 
-    public List<User> getAllUsersGreatherThen(int age) {
-        return getAllUsers().Where(user =>
+    public List<User> GetAllUsersGreatherThen(int age) {
+        return GetAllUsers().Where(user =>
             (((DateTime.Now - user.Bithday)).Days / 365) >= age).ToList();
     }
 
-    public void deleteUser(string login) {
-        _userRepository.deleteUser(login);
+    public void DeleteUser(string login) {
+        _userRepository.DeleteUser(login);
     }
 
-    public void deleteUserSoft(string login, string revokedBy) {
-        User user = getUserByLogin(login);
+    public void DeleteUserSoft(string login, string revokedBy) {
+        User user = GetUserByLogin(login);
         user.RevokedOn = DateTime.Now;
         user.RevokedBy = revokedBy;
-        _userRepository.addUser(user);
+        _userRepository.AddUser(user);
     }
 
-    public void restoreUser(string login) {
-        User user = getUserByLogin(login);
+    public void RestoreUser(string login) {
+        User user = GetUserByLogin(login);
         user.RevokedOn = null;
-        _userRepository.addUser(user);
+        _userRepository.AddUser(user);
+    }
+
+    public void CheckUserForRevokeOn(string login) {
+        if (GetUserByLogin(login).RevokedOn != null) {
+            throw new Exception();
+        }
     }
 }
