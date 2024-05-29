@@ -13,7 +13,6 @@ public class UserRepository : IUserRepository {
     public void AddUser(User user) {
         users = users.Where(u => u.Login != user.Login).ToList();
         users.Add(user);
-        Console.WriteLine(users.Count);
     }
 
     public User FindByLogin(string login) {

@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using Microsoft.AspNetCore.Routing.Constraints;
 using WebApplication1.Dto;
+using WebApplication1.Exceptions;
 
 namespace WebApplication1.Models;
 
@@ -42,6 +43,10 @@ public class User {
         set {
             if (value.All(letter => Char.IsLetterOrDigit(letter)))
                 _login = value;
+            else {
+                throw new IncorrectLoginException(
+                    "The login must contain only letters and numbers");
+            }
         }
     }
 
@@ -53,7 +58,8 @@ public class User {
             if (value.All(letter => Char.IsLetterOrDigit(letter)))
                 _password = value;
             else {
-                throw new Exception();
+                throw new IncorrectPasswordException(
+                    "The password must contain only letters and numbers");
             }
         }
     }
@@ -67,6 +73,10 @@ public class User {
             if (value.All(letter =>
                     Char.IsLetter(letter) || (letter <= 'Я' && letter >= 'А')))
                 _name = value;
+            else {
+                throw new IncorrectNameException(
+                    "The name must contain only english or russian");
+            }
         }
     }
 

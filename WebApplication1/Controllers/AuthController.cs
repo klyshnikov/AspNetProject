@@ -48,9 +48,8 @@ public class AuthController : ControllerBase, UsersApi {
     }
 
     [HttpPost("/login")]
-    public string Login(string name, string password) {
-
-        return _authService.FindTocken(name, password);
+    public string Login(string login, string password) {
+        return _authService.FindTocken(login, password);
     }
     
 }

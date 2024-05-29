@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using WebApplication1.Api;
 using WebApplication1.Dto;
+using WebApplication1.Exceptions;
 using WebApplication1.Models;
 
 namespace WebApplication1;
@@ -42,7 +43,7 @@ public class UsersController : ControllerBase {
     [Authorize]
     [HttpPut("/change-user-info")]
     public User ChangeNameOrGenderOrBirthday([FromBody] ChangeRequestForm form) {
-        //_userService.checkUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         return _userService.ChangeNameOrGenderOrBirthday(
             HttpContext.User.FindFirst(ClaimTypes.Name).Value,
             form.Name, 
@@ -54,6 +55,7 @@ public class UsersController : ControllerBase {
     [HttpPut("/change-user-password/{password}")]
     public User ChangePassword([FromRoute] string password) {
         _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
         return _userService.ChangePassword(userLogin, password);
     }
@@ -61,6 +63,7 @@ public class UsersController : ControllerBase {
     [Authorize]
     [HttpPut("/change-user-login/{login}")]
     public User ChangeLogin([FromRoute] string login) {
+        _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         var userLogin = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
         return _userService.ChangeLogin(userLogin, login);
@@ -76,7 +79,7 @@ public class UsersController : ControllerBase {
             return user;
         }
         else {
-            throw new Exception();
+            throw new IncorrectLoginOrPasswordException("Incorrect login or password");
         }
     }
 

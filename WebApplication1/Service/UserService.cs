@@ -1,6 +1,7 @@
 using System.Numerics;
 using WebApplication1.Api;
 using WebApplication1.Dto;
+using WebApplication1.Exceptions;
 using WebApplication1.Models;
 
 namespace WebApplication1.Service;
@@ -81,7 +82,7 @@ public class UserService : IUserService {
 
     public void CheckUserForRevokeOn(string login) {
         if (GetUserByLogin(login).RevokedOn != null) {
-            throw new Exception();
+            throw new UserException("This user was revoked");
         }
     }
 }

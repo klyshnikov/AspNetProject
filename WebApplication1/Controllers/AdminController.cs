@@ -18,25 +18,25 @@ public class AdminController : ControllerBase {
     
     
     //Update
-    [Authorize]
-    [HttpPut("/change-user-info")]
+    [Authorize(Roles = "admin")]
+    [HttpPut("/change-user-info-for-admin")]
     public User ChangeNameOrGenderOrBirthday([FromBody] ChangeForAdminRequestForm form) {
         //_userService.checkUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         return _userService.ChangeNameOrGenderOrBirthday(
-            form.OriginalLogin,
+            form.UserLogin,
             form.Name, 
             (Genders)form.Gender,
             new DateTime(form.BirthDate.Year, form.BirthDate.Month, form.BirthDate.Day));
     }
     
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut("/change-user-password/{userLogin}/{password}")]
     public User ChangePassword([FromRoute] string userLogin, [FromRoute] string password) {
         _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
         return _userService.ChangePassword(userLogin, password);
     }
 
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [HttpPut("/change-user-login/{userLogin}/{newLogin}")]
     public User ChangeLogin([FromRoute] string userLogin, [FromRoute] string newLogin) {
         _userService.CheckUserForRevokeOn(HttpContext.User.FindFirst(ClaimTypes.Name).Value);
