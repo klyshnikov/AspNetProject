@@ -7,7 +7,7 @@ public class ChangeRequestForm {
         BirthDate = birthDate;
     }
     
-    public String Name { get; set; }
+    public string Name { get; set; }
     public int Gender { get; set; }
     public BirthDayRequestForm BirthDate { get; set; }
 }

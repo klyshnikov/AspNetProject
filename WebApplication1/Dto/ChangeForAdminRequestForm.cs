@@ -8,8 +8,8 @@ public class ChangeForAdminRequestForm {
         BirthDate = birthDate;
     }
 
-    public String UserLogin { get; set; }
-    public String Name { get; set; }
+    public string UserLogin { get; set; }
+    public string Name { get; set; }
     public int Gender { get; set; }
     public BirthDayRequestForm BirthDate { get; set; }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using WebApplication1.Dto;
 using WebApplication1.Models;
 
@@ -6,7 +8,7 @@ namespace WebApplication1.Api;
 public interface IUserService {
     User CreateUser(CreateUserRequestForm form);
 
-    User ChangeNameOrGenderOrBirthday(String originalLogin, String name, Genders gender, DateTime birthDate);
+    User ChangeNameOrGenderOrBirthday(string originalLogin, string name, Genders gender, DateTime birthDate);
 
     User ChangePassword(string originalLogin, string password);
 

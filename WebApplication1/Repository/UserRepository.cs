@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using WebApplication1.Api;
+using WebApplication1.Exceptions;
 using WebApplication1.Models;
 
 namespace WebApplication1.Repository;
@@ -16,7 +19,11 @@ public class UserRepository : IUserRepository {
     }
 
     public User FindByLogin(string login) {
-        return users.Find(u => u.Login == login);
+        var user = users.Find(u => u.Login == login);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
     }
 
     public List<User> GetAllUsers() {
